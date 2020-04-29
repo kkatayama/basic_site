@@ -42,9 +42,9 @@ logged_in = {
     'status': False
 }
 
-group_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups?x-aio-key=aio_dMEy10S7djUvtpkoUJzu0YfEopFC"
-r = requests.get(group_url)
-groups = json.loads(r.text)
+with open('api_key') as f:
+    api_key = {'key': '{}'.format(f.read().strip())}
+
 
 @route('/')
 def getindex():
@@ -93,6 +93,9 @@ def getfeeds():
     feed_content = """"""
     top_feed = """"""
     bottom_feed = """"""
+    group_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups?x-aio-key={}".format(api_key['key'])
+    r = requests.get(group_url)
+    groups = json.loads(r.text)
 
     if logged_in['status'] == True:
         for group in groups:
@@ -141,7 +144,7 @@ def getdata():
         groupkey = request.query.groupkey
         feedkey = request.query.feedkey
         
-        feed_data_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups/{}/feeds/{}/data?x-aio-key=aio_dMEy10S7djUvtpkoUJzu0YfEopFC".format(groupkey, feedkey)
+        feed_data_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups/{}/feeds/{}/data?x-aio-key={}".format(groupkey, feedkey, api_key['key'])
         r = requests.get(feed_data_url)
         feed_data = json.loads(r.text)
     
