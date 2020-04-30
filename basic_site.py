@@ -7,7 +7,7 @@ import json
 top = """
 <!DOCTYPE html>
 <html>
-<title>SMart Meter</title>
+<title>SMeter</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -23,8 +23,9 @@ and is wrapped around the whole page content, except for the footer in this exam
 
 <!-- Header -->
 <header class="w3-container w3-center w3-padding-32"> 
-  <h1><b>SMart Meter</b></h1>
+  <h1><b>SMeter</b></h1>
   <p>A true smart meter that is able to communicate with other devices on the grid to optimize power quality while also offering advanced diagnostics of the <span class="w3-tag">AC voltage</span></p>
+  <a href='/'><button>Home/Logout</button></a><br />
 </header>
 """
 bottom = """
@@ -33,9 +34,9 @@ bottom = """
 """
 
 accounts = {
-    'SMeter 2': 'pass123',
-    'SMeter 3': 'pass123',
-    'SMeter 4': 'pass123',
+    'SMeter 2': 'password2',
+    'SMeter 3': 'password3',
+    'SMeter 4': 'password4',
 }
 logged_in = {
     'username': '',
@@ -58,7 +59,7 @@ def getindex():
             <label for="password">Password:</label>
             <input type="password" id="password" name="password">
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit">Login</button>
     </form>
     """    
     page = top + login_form + bottom
@@ -67,23 +68,23 @@ def getindex():
 @post('/login')
 def login():
     username = request.forms.get('username')
-    password = request.forms.get('password')
+    password = request.forms.get('password')    
     
     try:
         if password == accounts[username]:
             logged_in['status'] = True
             logged_in['username'] = username
             welcome = """
-            <h2>Welcom: <b>{}</b></h2>
+            <h2>Welcome, <b>{}</b></h2>
             <br /><br />
             <p><button class="w3-button w3-padding-large w3-white w3-border" onclick="location.href='/feeds'">
-                <b>GET FEEDS »</b>
+                <b>SEE YOUR USAGE »</b>
             </button></p>
             """.format(username)
         else:
-            welcome = """<h2>Incorrect Login</h2>"""
+            welcome = """<h2>Incorrect Login</h2><br /><br /><button onClick="goBack()">Retry</button><script>function goBack(){window.history.back();}</script>"""
     except:
-        welcome = """<h2>Incorrect Login</h2>"""
+        welcome = """<h2>Incorrect Login</h2><br /><br /><button onClick="goBack()">Retry</button><script>function goBack() {window.history.back();}</script>"""
         
     page = top + welcome + bottom
     return page
@@ -106,7 +107,7 @@ def getfeeds():
         top_feed = """
         <div class="w3-card w3-margin">
             <div class="w3-container w3-padding">
-                <h4>Your Feeds</h4>
+                <h4>Your Usage</h4>
             </div>
             <ul class="w3-ul w3-hoverable w3-white">
         """
@@ -177,5 +178,5 @@ def getdata():
     page = top + top_feed + feed_content + bottom_feed + bottom
     return page
                     
-
+                    
 run(host='localhost', port=8080, debug=True)
