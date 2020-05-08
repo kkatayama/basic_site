@@ -108,14 +108,15 @@ def get_table():
 
 # -- fetch all feeds associated with group key
 # -- return data formated for chart.js
-@app.route('/chart/<chartType>/<groupKey>/<feedKey>')
+@app.route('/chart/<chart_type>/<group_key>/<feed_key>')
 def get_chart():
-    chartName = '{}'
-    username = request.app.config['app.logged_in']['username']
-    safeName  = '_'.join([c.translate(str.maketrans('','',string.punctuation+' ')) for c in [feedKey, chartType]])
+    chart_name = '{}'
+    user_name = request.app.config['app.logged_in']['user_name']
+    safe_name  = '_'.join([c.translate(str.maketrans('','',string.punctuation+' ')) for c in [feed_key, chart_type]])
+
 
     print('chart selected...')
-    return template('charts', username=username, )
+    return template('charts', user_name=user_name, safe_name=safe_name, chart_name=chart_name)
 
 
 ##########################################

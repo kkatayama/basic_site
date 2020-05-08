@@ -9,8 +9,8 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  % if defined('username')
-    <title>{{username}}</title>
+  % if defined('user_name'):
+    <title>{{user_name}}</title>
   % end
 
   <!-- Custom fonts for this template-->
@@ -35,7 +35,9 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+        % if defined('user_name'):
+          <div class="sidebar-brand-text mx-3">{{user_name}} <sup>2</sup></div>
+        % end
       </a>
 
       <!-- Divider -->
@@ -342,19 +344,21 @@
 
             <div class="col-xl-8 col-lg-7">
 
-              <!-- Area Chart -->
+              <!-- Time Series Plot -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Area Chart</h6>
+                  % if defined('feed_key'):
+                    <h6 class="m-0 font-weight-bold text-primary">{{feed_key}}</h6>
+                  % end
                 </div>
                 <div class="card-body">
                   <div class="chart-area">
-                    % if defined('username'):
-                      <canvas id="{{username}}"></canvas>
+                    % if defined('user_name'):
+                      <canvas id="{{user_name}}"></canvas>
                     % end
                   </div>
                   <hr>
-                  Styling for the area chart can be found in the <code>/js/demo/chart-area-demo.js</code> file.
+                  Styling for the area chart can be found in the <code>/chart/line/template-line.js</code> file.
                 </div>
               </div>
 
@@ -403,7 +407,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2019</span>
+            <span>Copyright &copy; Your Website 2020</span>
           </div>
         </div>
       </footer>
@@ -456,7 +460,7 @@
   <!-- <script src="js/demo/chart-area-demo.js"></script> -->
 
   % if defined('chart_name'):
-    <script src="charts/line/{{chart_name}}-line.js"></script>
+    <script src="charts/line/{{chart_name}}_line.js"></script>
   % end
   <script src="js/demo/chart-pie-demo.js"></script>
   <script src="js/demo/chart-bar-demo.js"></script>
