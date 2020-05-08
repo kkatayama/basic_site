@@ -354,7 +354,7 @@
                 <div class="card-body">
                   <div class="chart-area">
                     % if defined('user_name'):
-                      <canvas id="{{user_name}}"></canvas>
+                      <canvas id="myLinechart"></canvas>
                     % end
                   </div>
                   <hr>
