@@ -1,3 +1,6 @@
+# -- ignore tests
+*.ipynb
+
 # -- ignore key file
 api_key
 
