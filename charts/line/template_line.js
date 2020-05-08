@@ -29,11 +29,11 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 // Area Chart Example
 % if defined('safe_name'):
-var ctx = document.getElementById({{safe_name}});
+ var ctx = document.getElementById({{safe_name}});
 % end
 
   % if defined('data') and defined('labels'):
-var myLineChart = new Chart(ctx, {
+   var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
     labels: {{labels}},
