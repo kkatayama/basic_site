@@ -28,10 +28,11 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 // Area Chart Example
-% if defined('safeName'):
-var ctx = document.getElementById({{safeName}});
+% if defined('safe_name'):
+var ctx = document.getElementById({{safe_name}});
 % end
 
+  % if defined('data') and defined('labels'):
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
@@ -49,7 +50,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+      data: {{data}},
     }],
   },
   options: {
@@ -81,7 +82,7 @@ var myLineChart = new Chart(ctx, {
           padding: 10,
           // Include a dollar sign in the ticks
           callback: function(value, index, values) {
-            return '$' + number_format(value);
+            return number_format(value);
           }
         },
         gridLines: {
@@ -119,3 +120,4 @@ var myLineChart = new Chart(ctx, {
     }
   }
 });
+  % end
