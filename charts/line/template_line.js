@@ -32,12 +32,13 @@ function number_format(number, decimals, dec_point, thousands_sep) {
  var ctx = document.getElementById({{safe_name}});
 % end
 
-  % if defined('data') and defined('labels'):
+
    var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
     labels: {{labels}},
     datasets: [{
+      % if defined('data') and defined('labels'):
       label: "{{label}}",
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
@@ -51,6 +52,8 @@ function number_format(number, decimals, dec_point, thousands_sep) {
       pointHitRadius: 10,
       pointBorderWidth: 2,
       data: {{data}},
+
+      % end
     }],
   },
   options: {
@@ -120,4 +123,3 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     }
   }
 });
-  % end

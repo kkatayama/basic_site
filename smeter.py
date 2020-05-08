@@ -110,7 +110,7 @@ def get_table():
 # -- return data formated for chart.js
 @app.route('/chart/<chart_type>/<group_key>/<feed_key>')
 def get_chart():
-    chart_name = '{}'
+    chart_name = '{}'.format()
     user_name = request.app.config['app.logged_in']['user_name']
     safe_name  = '_'.join([c.translate(str.maketrans('','',string.punctuation+' ')) for c in [feed_key, chart_type]])
 
