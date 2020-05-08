@@ -1,5 +1,9 @@
 # -- ignore tests
 *.ipynb
+data.json
+*.log
+.#*
+*.mypy_cache/
 
 # -- ignore key file
 api_key

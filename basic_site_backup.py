@@ -25,10 +25,17 @@ and is wrapped around the whole page content, except for the footer in this exam
 <div class="w3-content" style="max-width:1400px">
 
 <!-- Header -->
+<<<<<<< HEAD:basic_site_backup.py
+<header class="w3-container w3-center w3-padding-32"> 
+  <h1><b>SMeter</b></h1>
+  <img src="smeter.png" />
+  <p>A true smart meter that is able to communicate with other devices on the grid to optimize power quality while also offering advanced diagnostics of the <span class="w3-tag">AC voltage</span></p>
+=======
 <header class="w3-container w3-center w3-padding-32">
   <img src="smeter_logo.jpeg" width="500" height="300" />
   <h1><b>Welcome Users!</b></h1>
   <p>A true smart meter that is able to communicate with other devices on the grid to optimize power quality while also offering advanced diagnostics of the <span class="w3-tag">AC voltage.</span></p>
+>>>>>>> c12f18fcc61a2c0f3e0e595f688d968b19984136:basic_site.py
   <a href='/'><button>Home/Logout</button></a><br />
 </header>
 """
@@ -148,11 +155,11 @@ def getdata():
     if logged_in['status'] == True:
         groupkey = request.query.groupkey
         feedkey = request.query.feedkey
-        
+
         feed_data_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups/{}/feeds/{}/data?x-aio-key={}".format(groupkey, feedkey, api_key['key'])
         r = requests.get(feed_data_url)
         feed_data = json.loads(r.text)
-    
+
         top_feed = """
         <div class="w3-card w3-margin">
             <div class="w3-container w3-padding">
@@ -182,9 +189,18 @@ def getdata():
     page = top + top_feed + feed_content + bottom_feed + bottom
     return page
 
+<<<<<<< HEAD:basic_site_backup.py
+@route('/<filename:re:.*\.png>')
+def send_image(filename):
+    return static_file(filename, root=root_path, mimetype='image/png')
+
+
+run(host='localhost', port=8080, debug=True)
+=======
 @route('/<filename:re:.*\.jpeg>')
 def send_image(filename):
     return static_file(filename, root=root_path, mimetype='image/jpeg')
 
 
 run(reloader=True, host='0.0.0.0', port=8080, debug=True)
+>>>>>>> c12f18fcc61a2c0f3e0e595f688d968b19984136:basic_site.py
