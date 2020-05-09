@@ -459,11 +459,11 @@
   <!-- Page level custom scripts -->
   <!-- <script src="js/demo/chart-area-demo.js"></script> -->
 
-  % if defined('chart_name'):
-    <script src="charts/line/{{chart_name}}_line.js"></script>
+  % if defined('safe_name'):
+    <script src="charts/line/{{safe_name}}.js"></script>
   % end
-  <script src="js/demo/chart-pie-demo.js"></script>
-  <script src="js/demo/chart-bar-demo.js"></script>
+  <!-- <script src="js/demo/chart-pie-demo.js"></script> -->
+  <!-- <script src="js/demo/chart-bar-demo.js"></script> -->
 
 </body>
 

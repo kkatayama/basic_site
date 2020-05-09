@@ -3,8 +3,10 @@
 from bottle import Bottle, route, request, redirect, run, template, static_file, debug
 import pandas as pd
 import requests
+import string
 import json
 import sys
+import os
 
 app = Bottle()
 
@@ -81,16 +83,34 @@ def post_login():
         app.config['app.logged_in']['username'] = uname
         print('{} successfully logged: fetching feeds...'.format(uname))
 
-        group_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups?x-aio-key={}".format(request.app.config['app.api_key']['key'])
+        api_key = request.app.config['app.api_key']['key']
+        group_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups?x-aio-key={}".format(api_key)
 
         df = pd.DataFrame(pd.read_json(group_url), columns=['name','key','feeds'])
         df = df[df['name'] == uname]
 
         group_key = df.reset_index()['key'][0]
         group_feeds = [[g['key'],g['id'],g['name'],g['created_at']] for g in df['feeds'].explode()]
+        user_name = uname
         print(uname)
         print(group_key)
-        group_feeds
+
+        # -- hack to avoid async and chart not loaded case...
+        feed_keys = [fk[0] for fk in group_feeds]
+        for feed_key in feed_keys:
+            print(feed_key)
+            feed_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups/{}/feeds/{}/data?x-aio-key={}"
+            df = pd.read_json(feed_url.format(group_key, feed_key, api_key))
+            df = df.sort_values(by=['created_at'], ascending=True).reset_index()
+            labels = [str(tt) for tt in df['created_at']]
+            data   = list(df['value'])
+
+            chart_type = 'line'
+            safe_name  = '_'.join([c.translate(str.maketrans('','',string.punctuation+' ')) for c in [feed_key, chart_type]])
+            label = 'Time Series Plot: {}'.format(feed_key)
+            
+            with open('charts/line/{}.js'.format(safe_name), 'w') as f:
+                f.write(template('charts/line/template_line.js', group_key=group_key, feed_key=feed_key, safe_name=safe_name, label=label, labels=labels, data=data))
 
         return template('groups', username=uname, group_key=group_key, group_feeds=group_feeds)
     else:
@@ -108,15 +128,21 @@ def get_table():
 
 # -- fetch all feeds associated with group key
 # -- return data formated for chart.js
-@app.route('/chart/<chart_type>/<group_key>/<feed_key>')
+@app.route('/chart')
 def get_chart():
-    chart_name = '{}'.format()
-    user_name = request.app.config['app.logged_in']['user_name']
+    chart_type = 'line'
+    group_key = request.query.get('group_key')
+    feed_key = request.query.get('feed_key')
+    user_name = request.app.config['app.logged_in']['username']
     safe_name  = '_'.join([c.translate(str.maketrans('','',string.punctuation+' ')) for c in [feed_key, chart_type]])
-
-
     print('chart selected...')
-    return template('charts', user_name=user_name, safe_name=safe_name, chart_name=chart_name)
+    return template('charts', user_name=user_name, safe_name=safe_name)
+
+
+
+
+
+
 
 
 ##########################################

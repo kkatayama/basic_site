@@ -361,7 +361,7 @@
 
             <!-- Border Left Utilities -->
             <div class="col-lg-6">
-
+            % if defined('group_feeds'):
               % for group_feed in group_feeds:
               
               <div class="card shadow mb-6 text-center">
@@ -375,7 +375,7 @@
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; transform: translate3d(-175px, 21px, 0px); top: 0px; left: 0px; will-change: transform;">
                       <div class="dropdown-header">Process Feeds:</div>
                       <a class="dropdown-item" href="/table/{{group_key}}/{{group_feed[0]}}">Data Table Chart</a>
-                      <a class="dropdown-item" href="/chart/{{group_key}}/{{group_feed[0]}}">Time Series Plot</a>
+                      <a class="dropdown-item" href="/chart?group_key={{group_key}}&feed_key={{group_feed[0]}}">Time Series Plot</a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#">Cancel</a>
                     </div>
@@ -388,12 +388,12 @@
                     <p>
                       FEED ID:   {{group_feed[1]}} <br />
                       FEED NAME: {{group_feed[2]}} <br />
-                      FEED DATE: {{group_feed[1]}} <br />
+                      FEED DATE: {{group_feed[3]}} <br />
                     </p>
                   </div>
                 </div>
               </div>
-
+                %end
               % end
 
 
