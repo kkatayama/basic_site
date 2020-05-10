@@ -31,7 +31,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
@@ -45,7 +45,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -74,12 +74,12 @@
       </li>
 
       <!-- Nav Item - Utilities Collapse Menu -->
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Utilities</span>
         </a>
-        <div id="collapseUtilities" class="collapse show" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Custom Utilities:</h6>
             <a class="collapse-item" href="utilities-color.html">Colors</a>
@@ -320,7 +320,7 @@
                   Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="/logoff" data-toggle="modal" data-target="#logoutModal">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                   Logout
                 </a>
@@ -333,48 +333,50 @@
         <!-- End of Topbar -->
 
 
+
+
         <!-- CARDS TO DISPLAY GROUP FEED DATA -->
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
-          <div class="col-md-6 col-md-6 col-md-6">
-            <div class="card bg-dark text-white">
-              % if defined('username'):
-              <div class="card-text text-center">
-                Greetings: {{username}}
-              </div>
-              % end
-              <img src="smeter_logo.jpeg" class="card-img" alt="...">
-
-              <div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
-                % if defined('group_key'):
-                <h5 class="card-title">{{group_key}}</h5>
-                % end
-                <p class="card-text">Your collection of feed data.  Click on a feed group and select chart or plot.</p>
-              </div>
-            </div>
-          </div>
-
           <!-- Content Row -->
           <div class="row">
 
+            <div class="col-xl-8 col-lg-7">
+              <div class="card bg-dark text-white">
+                % if defined('username'):
+                <div class="card-text text-center py-3">
+                  <h2 class="m-0 font-weight-bold">Greetings: {{username}}</h2>
+                </div>
+                % end
+                <img src="smeter_logo.jpeg" class="card-img" alt="...">
+
+                <div class="card-img-overlay h-100 d-flex flex-column justify-content-end">
+                  % if defined('group_key'):
+                  <h5 class="card-title">{{group_key}}</h5>
+                  % end
+                  <p class="card-text">Your collection of feed data.  Click on a feed group and select chart or plot.</p>
+                </div>
+              </div>
+            </div>
+
             <!-- Border Left Utilities -->
-            <div class="col-lg-6">
-            % if defined('group_feeds'):
+            <div class="col-xl-4 col-lg-5">
+              % if defined('group_feeds'):
               % for group_feed in group_feeds:
               
-              <div class="card shadow mb-6 text-center">
+              <div class="card shadow mb-3 text-center">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">GROUP FEED KEY: {{group_feed[0]}}</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">{{group_feed[0]}}</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; transform: translate3d(-175px, 21px, 0px); top: 0px; left: 0px; will-change: transform;">
                       <div class="dropdown-header">Process Feeds:</div>
-                      <a class="dropdown-item" href="/table/{{group_key}}/{{group_feed[0]}}">Data Table Chart</a>
+                      <a class="dropdown-item" href="/table?group_key={{group_key}}&feed_key={{group_feed[0]}}">Data Table Chart</a>
                       <a class="dropdown-item" href="/chart?group_key={{group_key}}&feed_key={{group_feed[0]}}">Time Series Plot</a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#">Cancel</a>
@@ -384,16 +386,18 @@
                 <!-- Card Body -->
 
                 <div class="collapse show" id="collapseCardExample" style="">
-                  <div class="card-body">
+                  <div class="card-body text-left">
                     <p>
-                      FEED ID:   {{group_feed[1]}} <br />
-                      FEED NAME: {{group_feed[2]}} <br />
-                      FEED DATE: {{group_feed[3]}} <br />
+                      ID:   {{group_feed[1]}} <br />
+                      NAME: {{group_feed[2]}} <br />
+                      DATE: {{group_feed[3]}} <br />
+                      <hr>
+                      <code>Click the dropdown menu!</code>
                     </p>
                   </div>
                 </div>
               </div>
-                %end
+              %end
               % end
 
 

@@ -31,7 +31,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
@@ -45,7 +45,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -320,7 +320,7 @@
                   Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="/logoff" data-toggle="modal" data-target="#logoutModal">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                   Logout
                 </a>
@@ -342,7 +342,7 @@
           <!-- Content Row -->
           <div class="row">
 
-            <div class="col-xl-8 col-lg-7">
+            <div class="col-xl-12 col-lg-12">
 
               <!-- Time Series Plot -->
               <div class="card shadow mb-4">
@@ -354,7 +354,7 @@
                 <div class="card-body">
                   <div class="chart-area">
                     % if defined('user_name'):
-                      <canvas id="myLinechart"></canvas>
+                      <canvas id="myLineChart"></canvas>
                     % end
                   </div>
                   <hr>
@@ -362,39 +362,9 @@
                 </div>
               </div>
 
-              <!-- Bar Chart -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
-                </div>
-                <div class="card-body">
-                  <div class="chart-bar">
-                    <canvas id="myBarChart"></canvas>
-                  </div>
-                  <hr>
-                  Styling for the bar chart can be found in the <code>/js/demo/chart-bar-demo.js</code> file.
-                </div>
-              </div>
 
             </div>
 
-            <!-- Donut Chart -->
-            <div class="col-xl-4 col-lg-5">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  <div class="chart-pie pt-4">
-                    <canvas id="myPieChart"></canvas>
-                  </div>
-                  <hr>
-                  Styling for the donut chart can be found in the <code>/js/demo/chart-pie-demo.js</code> file.
-                </div>
-              </div>
-            </div>
           </div>
 
         </div>
@@ -454,7 +424,9 @@
   <script src="js/sb-admin-2.min.js"></script>
 
   <!-- Page level plugins -->
-  <script src="vendor/chart.js/Chart.min.js"></script>
+  <!-- <script src="vendor/chart.js/Chart.min.js"></script> -->
+  <!-- TIME FORMATTING SUPPORT NEEDS THE BUNDLED VERSION: TEDDY -->
+  <script src="vendor/chart.js/Chart.bundle.min.js"></script>
 
   <!-- Page level custom scripts -->
   <!-- <script src="js/demo/chart-area-demo.js"></script> -->
@@ -462,6 +434,8 @@
   % if defined('safe_name'):
     <script src="charts/line/{{safe_name}}.js"></script>
   % end
+
+
   <!-- <script src="js/demo/chart-pie-demo.js"></script> -->
   <!-- <script src="js/demo/chart-bar-demo.js"></script> -->
 

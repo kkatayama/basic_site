@@ -44,8 +44,15 @@ def get_index():
     status = request.app.config['app.logged_in']['status']
     if (status):
         username = request.app.config['app.logged_in']['username']
-        print('{} is logged in... serving: index.tpl'.format(username))
-        return template('groups', username=username)
+        print('{} is logged in... serving: groups.tpl'.format(username))
+        api_key = request.app.config['app.api_key']['key']
+        group_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups?x-aio-key={}".format(api_key)
+
+        df = pd.DataFrame(pd.read_json(group_url), columns=['name','key','feeds'])
+        df = df[df['name'] == username]
+        group_key = df.reset_index()['key'][0]
+        group_feeds = [[g['key'],g['id'],g['name'],g['created_at']] for g in df['feeds'].explode()]
+        return template('groups', username=username, group_key=group_key, group_feeds=group_feeds)
     else:
         print('user is not logged in... serving: login.tpl')
         return template('login')
@@ -58,10 +65,25 @@ def get_login():
     if (status):
         username = request.forms.get('username')
         print('user is logged in... serving: index.tpl')
-        return template('groups', username=username)
+        api_key = request.app.config['app.api_key']['key']
+        group_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups?x-aio-key={}".format(api_key)
+
+        df = pd.DataFrame(pd.read_json(group_url), columns=['name','key','feeds'])
+        df = df[df['name'] == username]
+        group_key = df.reset_index()['key'][0]
+        group_feeds = [[g['key'],g['id'],g['name'],g['created_at']] for g in df['feeds'].explode()]
+        return template('groups', username=username, group_key=group_key, group_feeds=group_feeds)
     else:
         print('user is not logged in... serving: login.tpl')
         return template('login')
+
+# -- logoff
+@app.route('/logoff')
+def get_logoff():
+    print('logoff()')
+    app.config['app.logged_in']['status'] = False
+    app.config['app.logged_in']['username'] = ''
+    return template('login')
 
 # -- check login credentials
 # -- on sucesss, fetch all group feeds
@@ -95,23 +117,6 @@ def post_login():
         print(uname)
         print(group_key)
 
-        # -- hack to avoid async and chart not loaded case...
-        feed_keys = [fk[0] for fk in group_feeds]
-        for feed_key in feed_keys:
-            print(feed_key)
-            feed_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups/{}/feeds/{}/data?x-aio-key={}"
-            df = pd.read_json(feed_url.format(group_key, feed_key, api_key))
-            df = df.sort_values(by=['created_at'], ascending=True).reset_index()
-            labels = [str(tt) for tt in df['created_at']]
-            data   = list(df['value'])
-
-            chart_type = 'line'
-            safe_name  = '_'.join([c.translate(str.maketrans('','',string.punctuation+' ')) for c in [feed_key, chart_type]])
-            label = 'Time Series Plot: {}'.format(feed_key)
-            
-            with open('charts/line/{}.js'.format(safe_name), 'w') as f:
-                f.write(template('charts/line/template_line.js', group_key=group_key, feed_key=feed_key, safe_name=safe_name, label=label, labels=labels, data=data))
-
         return template('groups', username=uname, group_key=group_key, group_feeds=group_feeds)
     else:
         return template('login', error='Bad Password')
@@ -119,10 +124,22 @@ def post_login():
 
 # -- fetch all feeds associated with group key
 # -- return data formated for DataTables
-@app.route('/table/<group_key>/<feed_key>')
+@app.route('/table')
 def get_table():
     print('table selected...')
+    group_key = request.query.get('group_key')
+    feed_key = request.query.get('feed_key')
+    api_key = request.app.config['app.api_key']['key']
+    user_name = request.app.config['app.logged_in']['username']
+    feed_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups/{}/feeds/{}/data?x-aio-key={}"
+    df = pd.read_json(feed_url.format(group_key, feed_key, api_key))
+    df = df.sort_values(by=['created_at'], ascending=True).reset_index()
 
+    tabledata = df.to_html(index=False, columns=['created_at', 'value', 'id', 'feed_id', 'feed_key', 'expiration'], escape=False).replace('<table border="1" class="dataframe">', '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">').replace('<tr style="text-align: right;">', '<tr>')
+
+    # with open('tables.tpl') as f:
+    #     table_template = f.read()
+    return template('tables.tpl', user_name=user_name, feed_key=feed_key, tabledata=tabledata)
 
 
 
@@ -133,10 +150,27 @@ def get_chart():
     chart_type = 'line'
     group_key = request.query.get('group_key')
     feed_key = request.query.get('feed_key')
+    api_key = request.app.config['app.api_key']['key']
     user_name = request.app.config['app.logged_in']['username']
     safe_name  = '_'.join([c.translate(str.maketrans('','',string.punctuation+' ')) for c in [feed_key, chart_type]])
+
     print('chart selected...')
-    return template('charts', user_name=user_name, safe_name=safe_name)
+    print(feed_key)
+    feed_url = "https://io.adafruit.com/api/v2/LukeZ1986/groups/{}/feeds/{}/data?x-aio-key={}"
+    df = pd.read_json(feed_url.format(group_key, feed_key, api_key))
+    df = df.sort_values(by=['created_at'], ascending=True).reset_index()
+    labels = [dt.isoformat().split('+')[0] for dt in df['created_at']]
+    data   = list(df['value'])
+
+    chart_type = 'line'
+    safe_name  = '_'.join([c.translate(str.maketrans('','',string.punctuation+' ')) for c in [feed_key, chart_type]])
+    label = 'Time Series Plot: {}'.format(feed_key)
+    with open('charts/line/{}.js'.format(safe_name), 'w') as f:
+        chart_js = template('charts/line/template_line.js', group_key=group_key, feed_key=feed_key, safe_name=safe_name, label=label, labels=labels, data=data).replace('&#039;','"')
+        f.write(chart_js)
+
+
+    return template('charts', user_name=user_name, safe_name=safe_name, feed_key=feed_key)
 
 
 
