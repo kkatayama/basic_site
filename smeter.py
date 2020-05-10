@@ -195,4 +195,4 @@ def serve_static_file(filename):
     return static_file('{}'.format(filename), root='{}'.format(root_path))
 
 port = int(os.environ.get('PORT', 8080))
-run(app, host='0.0.0.0', port=port, reloader=True, debug=False)
+run(app, host='0.0.0.0', port=port, reloader=True, debug=True)
