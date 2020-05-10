@@ -139,7 +139,7 @@ def get_table():
 
     # with open('tables.tpl') as f:
     #     table_template = f.read()
-    return template('tables.tpl', user_name=user_name, feed_key=feed_key, tabledata=tabledata)
+    return template('tables', user_name=user_name, feed_key=feed_key, tabledata=tabledata)
 
 
 
