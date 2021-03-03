@@ -8,3 +8,5 @@ data.json
 # -- ignore key file
 api_key
 
+# -- ignore mac thumbs
+*.DS_Store
