@@ -10,3 +10,6 @@ api_key
 
 # -- ignore mac thumbs
 *.DS_Store
+
+# -- ignore lock files
+*-lock.json
